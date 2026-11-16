@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>CRM I AM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap">
+<style>
+/* Painel de operação: cabeçalho floresta, números em serif, tabela densa. Paleta oficial I AM (Forest/Sage/Mint/Paper + Lime só em destaque). */
+:root {
+  --forest: #1F3B2D; --deep: #14261D; --sage: #6E8A78; --mint: #E3EDE6; --paper: #F7F8F4; --card: #FFFFFF;
+  --line: #D9E2DB; --ink: #16201A; --muted: #5B6B60; --lime: #D5E500;
+  --ok: #2E7D4F; --warn: #A86A00; --bad: #B4432F;
+  --serif: "DM Serif Display", Georgia, serif; --sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root {
+  --paper: #0F1712; --card: #16211A; --mint: #1B2A21; --line: #2A3A30; --ink: #E7EFE9; --muted: #9DB1A3; --sage: #8FA998;
+  --ok: #6CC48F; --warn: #E0A93B; --bad: #E07A66; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.45; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.top { background: var(--forest); color: #F2F6EF; padding-block: 22px 26px; }
+header.top .wrap { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; }
+h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.9rem, 4vw, 2.6rem); margin: 0; line-height: 1.05; }
+.sub { margin: 6px 0 0; color: #B9CBBE; max-width: 62ch; }
+.sub b { color: var(--lime); font-weight: 600; font-variant-numeric: tabular-nums; }
+.topmeta { display: flex; gap: 14px; align-items: center; font-size: .85rem; color: #B9CBBE; }
+.topmeta a { color: #F2F6EF; }
+main { display: flex; flex-direction: column; gap: 28px; padding-block: 24px 48px; }
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(135px, 1fr)); gap: 12px; }
+.kpi { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; }
+.kpi span { font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+.kpi b { font-family: var(--serif); font-weight: 400; font-size: 2.1rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.kpi small { color: var(--muted); font-size: .8rem; }
+h2 { font-size: 1rem; font-weight: 600; margin: 0 0 10px; letter-spacing: .01em; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
+.two > section { min-width: 0; }
+.funil { display: flex; flex-direction: column; gap: 8px; }
+.frow { display: grid; grid-template-columns: minmax(120px, 42%) 1fr 36px; gap: 10px; align-items: center; font-size: .9rem; }
+.frow .bar { height: 14px; background: var(--mint); border-radius: 3px; overflow: hidden; }
+.frow .bar i { display: block; height: 100%; background: var(--sage); border-radius: 3px; }
+.frow.ok .bar i { background: var(--ok); }
+.frow .n { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--card); }
+table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+th { text-align: left; font-size: .72rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; position: sticky; top: 0; background: var(--card); }
+td { padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; }
+td.nota { color: var(--muted); font-size: .85rem; min-width: 220px; }
+td a { color: inherit; font-weight: 600; text-decoration: none; border-bottom: 1px solid var(--line); }
+td a:hover { border-color: currentColor; }
+.pill { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: .78rem; border: 1px solid var(--line); white-space: nowrap; }
+.pill.ok { color: var(--ok); border-color: currentColor; }
+.pill.warn { color: var(--warn); border-color: currentColor; }
+.pill.bad { color: var(--bad); border-color: currentColor; }
+.pill.john { background: var(--lime); color: #14261D; border-color: var(--lime); }
+.tools { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; align-items: center; }
+.tools input, .tools select { font: inherit; font-size: .9rem; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--card); color: var(--ink); min-width: 0; }
+.tools input { flex: 1 1 200px; }
+.tools .count { color: var(--muted); font-size: .85rem; margin-left: auto; }
+:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+.empty { padding: 18px; color: var(--muted); }
+footer { color: var(--muted); font-size: .8rem; padding-bottom: 32px; }
+@media (max-width: 640px) { .frow { grid-template-columns: 1fr 64px 30px; } }
+.gate { min-height: 100vh; display: grid; place-items: center; padding: 24px max(16px, env(safe-area-inset-left, 0px)) 24px max(16px, env(safe-area-inset-right, 0px)); }
+.gatebox { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 14px; }
+.gatebox h1 { color: var(--ink); }
+.gatebox p { margin: 0; color: var(--muted); }
+.gatebox label { font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.gatebox input { font: inherit; padding: 12px 14px; border-radius: 4px; border: 1px solid var(--sage); background: transparent; color: var(--ink); }
+.gatebox button { font: inherit; font-weight: 600; padding: 12px; border: 0; border-radius: 4px; background: var(--lime); color: #14261D; cursor: pointer; }
+.gatebox .erro { color: var(--bad); font-size: .9rem; }
+</style>
+</head>
+<body>
+<div id="gate" class="gate">
+  <form id="gateform" class="gatebox">
+    <h1>CRM I AM</h1>
+    <p>Acompanhamento dos agentes de social selling. Acesso do time.</p>
+    <label for="senha">Senha do time</label>
+    <input id="senha" type="password" autocomplete="current-password" required>
+    <span class="erro" id="erro" hidden>Senha errada. Tenta de novo.</span>
+    <button type="submit" id="entrar">Entrar</button>
+  </form>
+</div>
+<div id="appwrap" hidden>
+<header class="top">
+  <div class="wrap">
+    <div>
+      <h1>CRM I AM</h1>
+      <p class="sub" id="lede">Carregando os dados dos agentes...</p>
+    </div>
+    <div class="topmeta"><span id="atualizado"></span><a href="#" id="sair">Sair</a></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="kpis">
+    <div class="kpi"><span>Pessoas no CRM</span><b id="k-pessoas">—</b><small>abordadas pelos agentes</small></div>
+    <div class="kpi"><span>Link do grupo enviado</span><b id="k-links">—</b><small>pessoas</small></div>
+    <div class="kpi"><span>Esperando resposta</span><b id="k-aguard">—</b><small>convidadas, sem resposta</small></div>
+    <div class="kpi"><span>Alto nível</span><b id="k-alto">—</b><small>atendimento do John</small></div>
+    <div class="kpi"><span>Seguem o perfil</span><b id="k-segue">—</b><small>dos leads conferidos</small></div>
+  </div>
+
+  <div class="two">
+    <section>
+      <h2>Onde cada pessoa está</h2>
+      <div class="funil" id="funil"></div>
+    </section>
+    <section>
+      <h2>Trabalho por agente</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Agente</th><th class="num">Ações</th><th class="num">DMs</th><th class="num">Comentários</th><th class="num">Links</th><th class="num">Hoje</th></tr></thead>
+          <tbody id="agentes"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <section>
+    <h2>Pessoas</h2>
+    <div class="tools">
+      <input id="busca" type="search" placeholder="Buscar @ ou nota" aria-label="Buscar">
+      <select id="f-etapa" aria-label="Etapa"></select>
+      <select id="f-agente" aria-label="Agente"></select>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Perfil</th><th>Etapa</th><th>Segue</th><th>Agente</th><th>Última ação</th><th>Nota</th></tr></thead>
+        <tbody id="crm"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Últimas ações</h2>
+    <div class="tools"><select id="f-hist" aria-label="Agente no histórico"></select></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Quando (Lisboa)</th><th>Agente</th><th>Canal</th><th>Perfil</th><th>Ação</th><th>Detalhe</th></tr></thead>
+        <tbody id="hist"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<footer class="wrap">Somente leitura. Os agentes atualizam os dados a cada rodada (30 min, das 8h às 23h). A página recarrega sozinha a cada minuto.</footer>
+</div>
+
+<script>
+const ETAPAS = {
+  link_enviado: ['Link enviado', 'ok'],
+  aguardando_resposta_grupo: ['Convidado, sem resposta', 'warn'],
+  comentou_lead: ['Comentou interesse', 'warn'],
+  aguardando_seguir: ['Pedido pra seguir (fluxo antigo)', 'warn'],
+  alto_nivel: ['Alto nível', 'john'],
+  john_assumiu: ['John assumiu', 'john'],
+  recusou: ['Recusou', 'bad'],
+  encerrado: ['Encerrado', '']
+};
+const ORDEM = Object.keys(ETAPAS);
+const $ = (id) => document.getElementById(id);
+const el = (tag, txt, cls) => { const e = document.createElement(tag); if (txt != null) e.textContent = txt; if (cls) e.className = cls; return e; };
+let D = { crm: [], acoes: [] };
+
+const toLisboa = (data, hora) => {
+  try {
+    const d = new Date(`${data}T${hora || '00:00'}:00Z`);
+    return d.toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+  } catch { return `${data} ${hora}`; }
+};
+const fillSelect = (sel, label, values, fmt) => {
+  const cur = sel.value;
+  sel.replaceChildren(new Option(label, ''), ...values.map((v) => new Option(fmt ? fmt(v) : v, v)));
+  if ([...sel.options].some((o) => o.value === cur)) sel.value = cur;
+};
+
+function render() {
+  const crm = D.crm, acoes = D.acoes;
+  const n = (e) => crm.filter((r) => r.etapa === e).length;
+  const conf = crm.filter((r) => r.segue === 'sim' || r.segue === 'não');
+  const segue = conf.length ? Math.round(100 * conf.filter((r) => r.segue === 'sim').length / conf.length) + '%' : '—';
+  const aguard = n('aguardando_resposta_grupo') + n('aguardando_seguir') + n('comentou_lead');
+  $('k-pessoas').textContent = crm.length;
+  $('k-links').textContent = n('link_enviado');
+  $('k-aguard').textContent = aguard;
+  $('k-alto').textContent = n('alto_nivel') + n('john_assumiu');
+  $('k-segue').textContent = segue;
+  const lede = $('lede'); lede.replaceChildren();
+  lede.append(el('b', crm.length), ' pessoas acompanhadas. ', el('b', n('link_enviado')), ' já receberam o link do grupo e ', el('b', aguard), ' esperam resposta.');
+  $('atualizado').textContent = D.atualizado ? 'Atualizado ' + new Date(D.atualizado).toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '';
+
+  // funil
+  const cont = {}; crm.forEach((r) => { cont[r.etapa] = (cont[r.etapa] || 0) + 1; });
+  const etapas = Object.keys(cont).sort((a, b) => (ORDEM.indexOf(a) + 99 * (ORDEM.indexOf(a) < 0)) - (ORDEM.indexOf(b) + 99 * (ORDEM.indexOf(b) < 0)));
+  const max = Math.max(1, ...Object.values(cont));
+  $('funil').replaceChildren(...etapas.map((e) => {
+    const row = el('div', null, 'frow' + (e === 'link_enviado' ? ' ok' : ''));
+    const bar = el('div', null, 'bar'); const i = el('i'); i.style.width = (100 * cont[e] / max) + '%'; bar.append(i);
+    row.append(el('span', (ETAPAS[e] || [e])[0]), bar, el('span', cont[e], 'n'));
+    return row;
+  }));
+
+  // agentes
+  const hoje = new Date().toISOString().slice(0, 10);
+  const ag = new Map();
+  acoes.forEach((a) => {
+    const r = ag.get(a.agente) || { agente: a.agente, acoes: 0, dms: 0, com: 0, links: 0, hoje: 0 };
+    r.acoes++; if (a.canal === 'DM') r.dms++; if (a.canal === 'comentário') r.com++; if (a.acao === 'link enviado') r.links++; if (a.data === hoje) r.hoje++;
+    ag.set(a.agente, r);
+  });
+  const agRows = [...ag.values()].sort((a, b) => b.acoes - a.acoes);
+  $('agentes').replaceChildren(...(agRows.length ? agRows.map((r) => {
+    const tr = el('tr'); tr.append(el('td', r.agente));
+    [r.acoes, r.dms, r.com, r.links, r.hoje].forEach((v) => tr.append(el('td', v, 'num'))); return tr;
+  }) : [(() => { const tr = el('tr'); const td = el('td', 'Nenhuma ação registrada ainda.', 'empty'); td.colSpan = 6; tr.append(td); return tr; })()]));
+
+  fillSelect($('f-etapa'), 'Todas as etapas', etapas, (e) => `${(ETAPAS[e] || [e])[0]} (${cont[e]})`);
+  fillSelect($('f-agente'), 'Todos os agentes', [...new Set(crm.map((r) => r.agente).filter(Boolean))].sort());
+  fillSelect($('f-hist'), 'Todos os agentes', [...new Set(acoes.map((a) => a.agente))].sort());
+  renderCrm(); renderHist();
+}
+
+function renderCrm() {
+  const q = $('busca').value.trim().toLowerCase(), fe = $('f-etapa').value, fa = $('f-agente').value;
+  const rows = D.crm.filter((r) => (!fe || r.etapa === fe) && (!fa || r.agente === fa) && (!q || (r.perfil + ' ' + (r.nota || '')).toLowerCase().includes(q)))
+    .sort((a, b) => ORDEM.indexOf(a.etapa) - ORDEM.indexOf(b.etapa) || a.perfil.localeCompare(b.perfil));
+  $('count').textContent = `${rows.length} de ${D.crm.length}`;
+  if (!rows.length) { const tr = el('tr'); const td = el('td', 'Ninguém com esse filtro.', 'empty'); td.colSpan = 6; tr.append(td); $('crm').replaceChildren(tr); return; }
+  $('crm').replaceChildren(...rows.map((r) => {
+    const tr = el('tr');
+    const a = el('a', r.perfil); a.href = 'https://www.instagram.com/' + r.perfil.replace('@', '') + '/'; a.target = '_blank'; a.rel = 'noopener';
+    const t0 = el('td'); t0.append(a);
+    const e = ETAPAS[r.etapa] || [r.etapa, ''];
+    const t1 = el('td'); t1.append(el('span', e[0], 'pill ' + e[1]));
+    tr.append(t0, t1, el('td', r.segue), el('td', r.agente), el('td', r.ultima_acao), el('td', r.nota, 'nota'));
+    return tr;
+  }));
+}
+
+function renderHist() {
+  const fa = $('f-hist').value;
+  const rows = D.acoes.filter((a) => !fa || a.agente === fa).slice().sort((a, b) => (b.data + b.hora_utc).localeCompare(a.data + a.hora_utc)).slice(0, 80);
+  $('hist').replaceChildren(...rows.map((a) => {
+    const tr = el('tr');
+    tr.append(el('td', toLisboa(a.data, a.hora_utc)), el('td', a.agente), el('td', a.canal), el('td', a.perfil), el('td', a.acao), el('td', a.detalhe, 'nota'));
+    return tr;
+  }));
+}
+
+const ub = (b) => Uint8Array.from(atob(b), (c) => c.charCodeAt(0));
+async function decrypt(pass) {
+  const r = await fetch('data.enc.json?t=' + Date.now(), { cache: 'no-store' });
+  const e = await r.json();
+  const base = await crypto.subtle.importKey('raw', new TextEncoder().encode(pass), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: ub(e.salt), iterations: e.iter, hash: 'SHA-256' }, base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: ub(e.iv) }, key, ub(e.data));
+  return JSON.parse(new TextDecoder().decode(pt));
+}
+let SENHA = null;
+const guardar = (p) => { try { localStorage.setItem('iamcrm', p); } catch {} };
+const lembrada = () => { try { return localStorage.getItem('iamcrm'); } catch { return null; } };
+async function load() {
+  if (!SENHA) return;
+  try { D = await decrypt(SENHA); render(); }
+  catch { $('lede').textContent = 'Não consegui carregar os dados agora. Tento de novo em 1 minuto.'; }
+}
+async function entrar(p, silencioso) {
+  $('entrar').disabled = true;
+  try {
+    D = await decrypt(p); SENHA = p; guardar(p);
+    $('gate').hidden = true; $('appwrap').hidden = false; render();
+  } catch { if (!silencioso) $('erro').hidden = false; }
+  $('entrar').disabled = false;
+}
+$('gateform').addEventListener('submit', (ev) => { ev.preventDefault(); $('erro').hidden = true; entrar($('senha').value); });
+$('sair').addEventListener('click', (ev) => { ev.preventDefault(); try { localStorage.removeItem('iamcrm'); } catch {} location.reload(); });
+['busca', 'f-etapa', 'f-agente'].forEach((id) => $(id).addEventListener('input', renderCrm));
+$('f-hist').addEventListener('input', renderHist);
+const p0 = lembrada(); if (p0) entrar(p0, true);
+setInterval(load, 60000);
+</script>
+</body>
+</html>
